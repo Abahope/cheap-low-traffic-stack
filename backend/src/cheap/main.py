@@ -3,6 +3,7 @@ from enum import Enum
 
 from aiobotocore.session import get_session
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 from starlette import status
@@ -32,6 +33,12 @@ class ItemsTable(Enum):
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
