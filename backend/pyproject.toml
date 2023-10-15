@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 fastapi = {extras = ["all"], version = "^0.103.0"}
 aiobotocore = "^2.6.0"
+mangum = "^0.17.0"
 
 [tool.poetry.group.dev.dependencies]
 types-aiobotocore = {extras = ["essential"], version = "^2.6.0"}

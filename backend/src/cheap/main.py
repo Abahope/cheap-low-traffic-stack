@@ -1,5 +1,6 @@
 import datetime
 from enum import Enum
+from logging import getLogger
 
 from aiobotocore.session import get_session
 from fastapi import FastAPI
@@ -7,6 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 from starlette import status
+from mangum import Mangum
+
+logger = getLogger(__name__)
 
 
 def client():
@@ -95,3 +99,10 @@ async def get_items() -> dict[str, Item]:
             item[ItemsTable.primary_key.value]["S"]: ItemsTable.deserializer(item)
             for item in response["Responses"][ItemsTable.name_.value]
         }
+
+
+def handler(event, context):
+    logger.debug(f"Received event {event}")
+    magnum = Mangum(app)
+    response = magnum(event, context)
+    return response
