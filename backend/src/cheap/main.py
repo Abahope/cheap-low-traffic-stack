@@ -62,3 +62,29 @@ async def create_item(item: Item) -> Item:
             },
         )
         return item
+
+
+@app.get("/items")
+async def get_items() -> dict[str, Item]:
+    async with client() as db:
+        # Get all the keys
+        response = await db.scan(
+            TableName=ItemsTable.name_.value,
+            ProjectionExpression=ItemsTable.primary_key.value,
+        )
+        keys = [item[ItemsTable.primary_key.value]["S"] for item in response["Items"]]
+        if not keys:
+            return {}
+
+        # Get all the items
+        response = await db.batch_get_item(
+            RequestItems={
+                ItemsTable.name_.value: {
+                    "Keys": [{ItemsTable.primary_key.value: {"S": key}} for key in keys]
+                }
+            }
+        )
+        return {
+            item[ItemsTable.primary_key.value]["S"]: ItemsTable.deserializer(item)
+            for item in response["Responses"][ItemsTable.name_.value]
+        }
