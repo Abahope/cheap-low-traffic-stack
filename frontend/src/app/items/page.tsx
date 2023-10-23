@@ -1,6 +1,7 @@
 "use client";
 import { apiHost } from "@/constants";
 import React from "react";
+import Link from "next/link";
 
 export default function Items() {
   // Get items
@@ -15,6 +16,7 @@ export default function Items() {
 
   return (
     <main>
+      <Link href="/">Home</Link>
       <h1>Items</h1>
       <h2>Current items</h2>
       <ul>
